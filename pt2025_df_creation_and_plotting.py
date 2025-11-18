@@ -1,4 +1,3 @@
-# test run 
 import os
 import math
 import numpy as np
@@ -9,7 +8,7 @@ from pathlib import Path
 import datetime
 
 # -------------------------------------------------------------------
-# Creation of file paths to different CSV files
+# File paths
 # -------------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent / "ProjectTrueGraphs" / "csv files"
 
