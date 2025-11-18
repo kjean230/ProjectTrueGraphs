@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import datetime
 
-#creation of a path to the csv file and reading it into spider dataframe 
+# creation of a path to the csv file and reading it into spider dataframe 
 CSV_FILE = Path(__file__).resolve().parent.parent / "ProjectTrueGraphs" / "csv files" / "file_of_spiders - Sheet1.csv"
 spider_df = pd.read_csv(CSV_FILE, dtype=str)
 # reading in the other two csv files into dataframes
@@ -42,6 +42,7 @@ weather_df['date_month'] = pd.to_datetime(weather_df['date_month'])
 weather_df['year'] = weather_df['date_month'].dt.year
 weather_df['month'] = weather_df['date_month'].dt.month
 
+<<<<<<< HEAD
 # THIS IS FOR THE YEAR 2017 ONLY
 expanded_rows = []
 for idx, row in air_quality_df.iterrows():
@@ -54,18 +55,36 @@ for idx, row in air_quality_df.iterrows():
     # Decide which months to cover based on period
     if 'Winter' in period:
         # Winter: Dec of start year, Jan and Feb of next year
+=======
+expanded_rows = []
+for idx, row in air_quality_df.iterrows():
+    period = row['time_period']
+    if pd.isnull(period):
+        continue
+    start_date = pd.to_datetime(row['start_date'])
+    data_value = row['data_value']
+
+    # Handle Winter (e.g., "Winter 2017-18" with start_date Dec 2017)
+    if 'Winter' in period:
+>>>>>>> expandDF2017
         months = [
             start_date,
             start_date + pd.DateOffset(months=1),
             start_date + pd.DateOffset(months=2)
         ]
+<<<<<<< HEAD
     elif 'Summer' in period:
         # Summer: Jun, Jul, Aug of start year (adjust as needed for your data)
+=======
+    # Handle Summer (e.g., "Summer 2018" with start_date June 2018)
+    elif 'Summer' in period:
+>>>>>>> expandDF2017
         months = [
             start_date,
             start_date + pd.DateOffset(months=1),
             start_date + pd.DateOffset(months=2)
         ]
+<<<<<<< HEAD
     elif 'Annual' in period:
         # Annual: all 12 months of the year
         months = [pd.Timestamp(f'{start_date.year}-{m:02d}-01') for m in range(1, 13)]
@@ -74,6 +93,14 @@ for idx, row in air_quality_df.iterrows():
         continue
 
     # For each covered month, add a row
+=======
+    # Handle Annual (e.g., "Annual Average 2019" with start_date Jan 2019)
+    elif 'Annual' in period:
+        months = [pd.Timestamp(f'{start_date.year}-{m:02d}-01') for m in range(1, 13)]
+    else:
+        continue
+
+>>>>>>> expandDF2017
     for date_month in months:
         expanded_rows.append({
             'year': date_month.year,
@@ -82,5 +109,13 @@ for idx, row in air_quality_df.iterrows():
             'data_value': data_value
         })
 
+<<<<<<< HEAD
 # Create a new DataFrame from the expanded rows
 expanded_aq_df = pd.DataFrame(expanded_rows)
+=======
+expanded_air_quality_df = pd.DataFrame(expanded_rows)
+start = pd.Timestamp('2017-01-01')
+cutoff = pd.Timestamp('2023-06-01')
+expanded_air_quality_df = expanded_air_quality_df[(expanded_air_quality_df['date_month'] >= start) & (expanded_air_quality_df['date_month'] <= cutoff)].reset_index(drop=True)
+print(expanded_air_quality_df)
+>>>>>>> expandDF2017
