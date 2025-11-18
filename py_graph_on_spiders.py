@@ -92,3 +92,7 @@ start = pd.Timestamp('2017-01-01')
 cutoff = pd.Timestamp('2023-06-01')
 expanded_air_quality_df = expanded_air_quality_df[(expanded_air_quality_df['date_month'] >= start) & (expanded_air_quality_df['date_month'] <= cutoff)].reset_index(drop=True)
 print(expanded_air_quality_df)
+
+df = pd.merge(spider_monthly, expanded_air_quality_df, on='date_month', how='outer')
+df = pd.merge(df, weather_df, on='date_month', how='outer')
+print(df.fillna(0))
