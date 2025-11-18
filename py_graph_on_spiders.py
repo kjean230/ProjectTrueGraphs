@@ -59,3 +59,18 @@ weather_monthly_df = clean_weather_monthly(
     cutoff=cutoff,
     station_name="LAGUARDIA AIRPORT, NY US"
 )
+
+# creating new dataframe that contains all information
+# merges the spider monthly counts with weather and air quality dataframes
+# uses a left join (similar to sql) to keep all the spider data
+base_months = build_monthly_grid(start=start, cutoff=cutoff)
+df_monthly = (
+    base_months.merge(spider_monthly, on=["year", "month"], how="left")
+    .merge(weather_monthly_df, on=['year', 'month', 'date_month'], how='left')
+    .merge(air_quality_df, on=['year', 'month', 'date_month'], how='left')
+)
+
+# if any spiders are not accounted for, fill those null values with 0
+# we can also sort the dataframe by year and month to ensure proper order/readability
+df_monthly['spider_count'] = df_monthly['spider_count'].fillna(0)
+df_monthly = df_monthly.sort_values(['year', 'month']).reset_index(drop=True)
