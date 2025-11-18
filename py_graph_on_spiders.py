@@ -45,4 +45,6 @@ weather_df['month'] = weather_df['date_month'].dt.month
 # merging dataframes together
 # merges spider monthly dataframe with air quality and weather dataframes on year, month, and date_month columns
 # similar to sql left join
+
 df = pd.merge(spider_monthly, air_quality_df, on =['year', 'month', 'date_month'], how='left').merge(weather_df, on =['year', 'month', 'date_month'], how='left')
+print(df.head())
