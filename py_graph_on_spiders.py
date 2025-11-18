@@ -42,40 +42,34 @@ weather_df['date_month'] = pd.to_datetime(weather_df['date_month'])
 weather_df['year'] = weather_df['date_month'].dt.year
 weather_df['month'] = weather_df['date_month'].dt.month
 
-# THIS IS FOR THE YEAR 2017 ONLY
 expanded_rows = []
 for idx, row in air_quality_df.iterrows():
     period = row['time_period']
     if pd.isnull(period):
-        continue # skip rows with missing period
-    start_date = row['start_date']
+        continue
+    start_date = pd.to_datetime(row['start_date'])
     data_value = row['data_value']
-    # Convert start_date to pandas Timestamp if not already
-    start_date = pd.to_datetime(start_date)
-    
-    # Decide which months to cover based on period
+
+    # Handle Winter (e.g., "Winter 2017-18" with start_date Dec 2017)
     if 'Winter' in period:
-        # Winter: Dec of start year, Jan and Feb of next year
         months = [
             start_date,
             start_date + pd.DateOffset(months=1),
             start_date + pd.DateOffset(months=2)
         ]
+    # Handle Summer (e.g., "Summer 2018" with start_date June 2018)
     elif 'Summer' in period:
-        # Summer: Jun, Jul, Aug of start year (adjust as needed for your data)
         months = [
             start_date,
             start_date + pd.DateOffset(months=1),
             start_date + pd.DateOffset(months=2)
         ]
+    # Handle Annual (e.g., "Annual Average 2019" with start_date Jan 2019)
     elif 'Annual' in period:
-        # Annual: all 12 months of the year
         months = [pd.Timestamp(f'{start_date.year}-{m:02d}-01') for m in range(1, 13)]
     else:
-        # If you have other periods, add more logic here
         continue
 
-    # For each covered month, add a row
     for date_month in months:
         expanded_rows.append({
             'year': date_month.year,
@@ -84,5 +78,7 @@ for idx, row in air_quality_df.iterrows():
             'data_value': data_value
         })
 
-# Create a new DataFrame from the expanded rows
 expanded_air_quality_df = pd.DataFrame(expanded_rows)
+start = pd.Timestamp('2017-01-01')
+cutoff = pd.Timestamp('2023-06-01')
+expanded_air_quality_df = expanded_air_quality_df[(expanded_air_quality_df['date_month'] >= start) & (expanded_air_quality_df['date_month'] <= cutoff)].reset_index(drop=True)
