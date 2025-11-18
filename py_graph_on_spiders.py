@@ -33,6 +33,7 @@ spider_monthly = (
 
 # creating year and month columns in air quality dataframe
 air_quality_df['start_date'] = pd.to_datetime(air_quality_df['start_date'])
+air_quality_df['date_month'] = air_quality_df['start_date'].values.astype('datetime64[M]')
 air_quality_df['year'] = air_quality_df['start_date'].dt.year
 air_quality_df['month'] = air_quality_df['start_date'].dt.month
 
@@ -40,3 +41,8 @@ air_quality_df['month'] = air_quality_df['start_date'].dt.month
 weather_df['date_month'] = pd.to_datetime(weather_df['date_month'])
 weather_df['year'] = weather_df['date_month'].dt.year
 weather_df['month'] = weather_df['date_month'].dt.month
+
+# merging dataframes together
+# merges spider monthly dataframe with air quality and weather dataframes on year, month, and date_month columns
+# similar to sql left join
+df = pd.merge(spider_monthly, air_quality_df, on =['year', 'month', 'date_month'], how='left').merge(weather_df, on =['year', 'month', 'date_month'], how='left')
