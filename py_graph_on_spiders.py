@@ -83,3 +83,8 @@ for idx, row in air_quality_df.iterrows():
             'date_month': date_month,
             'data_value': data_value
         })
+
+# Create a new DataFrame from the expanded rows
+expanded_air_quality_df = pd.DataFrame(expanded_rows)
+print("expanded_air_quality_df shape:", expanded_air_quality_df.shape)
+print(expanded_air_quality_df.head())
