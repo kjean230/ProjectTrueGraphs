@@ -49,3 +49,13 @@ air_quality_df = clean_air_quality_monthly(
     start=start,
     cutoff=cutoff,
 )
+
+# cleaning the weather CSV file
+# also making a dataframe for spiders as well
+# similar format to the spider cleaning functions
+weather_monthly_df = clean_weather_monthly(
+    CSV_FILE_WEATHER,
+    start=start,
+    cutoff=cutoff,
+    station_name="LAGUARDIA AIRPORT, NY US"
+)
