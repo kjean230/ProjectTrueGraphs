@@ -74,3 +74,5 @@ df_monthly = (
 # we can also sort the dataframe by year and month to ensure proper order/readability
 df_monthly['spider_count'] = df_monthly['spider_count'].fillna(0)
 df_monthly = df_monthly.sort_values(['year', 'month']).reset_index(drop=True)
+
+print(df_monthly)
