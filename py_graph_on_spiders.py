@@ -85,14 +85,14 @@ for idx, row in air_quality_df.iterrows():
            'date_month': date_month,
            'data_value': data_value
        })
-
-
 expanded_air_quality_df = pd.DataFrame(expanded_rows)
 start = pd.Timestamp('2017-01-01')
 cutoff = pd.Timestamp('2023-06-01')
 expanded_air_quality_df = expanded_air_quality_df[(expanded_air_quality_df['date_month'] >= start) & (expanded_air_quality_df['date_month'] <= cutoff)].reset_index(drop=True)
 print(expanded_air_quality_df)
 
+# creates final dataframe by merging all three dataframes on date_month column
 df = pd.merge(spider_monthly, expanded_air_quality_df, on='date_month', how='outer')
 df = pd.merge(df, weather_df, on='date_month', how='outer')
-print(df.fillna(0))
+df = df.fillna(0)
+
