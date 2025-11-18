@@ -42,18 +42,7 @@ weather_df['date_month'] = pd.to_datetime(weather_df['date_month'])
 weather_df['year'] = weather_df['date_month'].dt.year
 weather_df['month'] = weather_df['date_month'].dt.month
 
-# merging dataframes together
-# merges spider monthly dataframe with air quality and weather dataframes on year, month, and date_month columns
-# similar to sql left join
-
-import pandas as pd
-
-# Example row
-row = {
-    'start_date': pd.Timestamp('2017-12-01'),
-    'data_value': 21.31
-}
-
+# THIS IS FOR THE YEAR 2017 ONLY
 # Generate the three months for annual
 # january, february, and march will have the AQ value that was originally on january 1st
 winter_months = [
