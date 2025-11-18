@@ -43,3 +43,43 @@ weather_df['year'] = weather_df['date_month'].dt.year
 weather_df['month'] = weather_df['date_month'].dt.month
 
 # THIS IS FOR THE YEAR 2017 ONLY
+expanded_rows = []
+for idx, row in air_quality_df.iterrows():
+    period = row['time_period']
+    if pd.isnull(period):
+        continue # skip rows with missing period
+    start_date = row['start_date']
+    data_value = row['data_value']
+    # Convert start_date to pandas Timestamp if not already
+    start_date = pd.to_datetime(start_date)
+    
+    # Decide which months to cover based on period
+    if 'Winter' in period:
+        # Winter: Dec of start year, Jan and Feb of next year
+        months = [
+            start_date,
+            start_date + pd.DateOffset(months=1),
+            start_date + pd.DateOffset(months=2)
+        ]
+    elif 'Summer' in period:
+        # Summer: Jun, Jul, Aug of start year (adjust as needed for your data)
+        months = [
+            start_date,
+            start_date + pd.DateOffset(months=1),
+            start_date + pd.DateOffset(months=2)
+        ]
+    elif 'Annual' in period:
+        # Annual: all 12 months of the year
+        months = [pd.Timestamp(f'{start_date.year}-{m:02d}-01') for m in range(1, 13)]
+    else:
+        # If you have other periods, add more logic here
+        continue
+
+    # For each covered month, add a row
+    for date_month in months:
+        expanded_rows.append({
+            'year': date_month.year,
+            'month': date_month.month,
+            'date_month': date_month,
+            'data_value': data_value
+        })
