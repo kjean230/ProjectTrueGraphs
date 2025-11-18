@@ -1,4 +1,4 @@
-# test run 
+# py_graph_on_spiders.py
 import os
 import math
 import numpy as np
