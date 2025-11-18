@@ -41,4 +41,11 @@ spider_df = clean_observation_csv(
 spider_monthly = aggregate_monthly_counts(spider_df, count_col="spider_count")
 
 # cleaning the air quality CSV file
+# also making a dataframe for spiders as well
 # similar format to the spider cleaning functions
+
+air_quality_df = clean_air_quality_monthly(
+    CSV_FILE_AQ,
+    start=start,
+    cutoff=cutoff,
+)
