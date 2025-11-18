@@ -1,7 +1,7 @@
 # ====== py_graph_on_spiders.py ====== #
 import os
 import math
-import pathlib as Path
+from pathlib import Path
 import datetime as dt
 
 import pandas as pd
@@ -19,10 +19,15 @@ from data_cleaning import (
 )
 
 # creates file paths for specific csv files
-BASE_DIR = Path(__file__).resolve().parent.parent / "ProjectTrueGraphs" / "csv files"
-CSV_FILE_SPIDERS = BASE_DIR / "file_of_spiders - Sheet1.csv"
-CSV_FILE_WEATHER = BASE_DIR / "file_of_monthly_weather.csv"
-CSV_FILE_AQ = BASE_DIR / "file_of_air_quality.csv"
+try:
+    BASE_DIR = Path(__file__).resolve().parent.parent / "ProjectTrueGraphs" / "csv files"
+
+    CSV_FILE_SPIDERS = BASE_DIR / "file_of_spiders - Sheet1.csv"
+    CSV_FILE_WEATHER = BASE_DIR / "file_of_monthly_weather.csv"
+    CSV_FILE_AQ = BASE_DIR / "file_of_air_quality.csv"
+except Exception as e:
+    print(f"Error setting up file paths: {e}")
+    raise
 
 # creates a start and cutoff date for cleaning the dataframes
 # range will be from January 1, 2017 to June 1, 2023
