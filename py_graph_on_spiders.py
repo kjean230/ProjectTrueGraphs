@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import datetime
 
-#creation of a path to the csv file and reading it into spider dataframe 
+# creation of a path to the csv file and reading it into spider dataframe 
 CSV_FILE = Path(__file__).resolve().parent.parent / "ProjectTrueGraphs" / "csv files" / "file_of_spiders - Sheet1.csv"
 spider_df = pd.read_csv(CSV_FILE, dtype=str)
 # reading in the other two csv files into dataframes
@@ -82,3 +82,4 @@ expanded_air_quality_df = pd.DataFrame(expanded_rows)
 start = pd.Timestamp('2017-01-01')
 cutoff = pd.Timestamp('2023-06-01')
 expanded_air_quality_df = expanded_air_quality_df[(expanded_air_quality_df['date_month'] >= start) & (expanded_air_quality_df['date_month'] <= cutoff)].reset_index(drop=True)
+print(expanded_air_quality_df)
