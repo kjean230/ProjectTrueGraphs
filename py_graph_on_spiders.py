@@ -82,22 +82,56 @@ df_monthly = df_monthly.sort_values("date_month").reset_index(drop=True)
 
 print(df_monthly)
 
-# ====== now creating graphs below ====== #
-# creating a scatter plot to visualize the relationship between spider counts and average temperature
-df_scatter_temp = df_monthly.dropna(subset=['temp_mean'])
-fig, ax = plt.subplots(figsize=(10, 6))
-for year, group in df_scatter_temp.groupby("year"):
-    group_sorted = group.sort_values("temp_mean")
-    ax.plot(
-        group_sorted["temp_mean"],
-        group_sorted["spider_count"],
-        marker="o",   # keep the points visible
-        label=str(year),
-    )
-ax.set_xlabel("Monthly mean temperature (°F)")
-ax.set_ylabel("Spider abundance (monthly Arachnida observations)")
-ax.set_title("Spider abundance vs temperature by year")
-ax.legend(title="Year")
 
-fig.tight_layout()
-plt.show()
+# # ====== now creating graphs below ====== #
+# # creating a scatter plot to visualize the relationship between spider counts and average temperature
+# df_scatter_temp = df_monthly.dropna(subset=['temp_mean'])
+# fig, ax = plt.subplots(figsize=(10, 6))
+# for year, group in df_scatter_temp.groupby("year"):
+#     group_sorted = group.sort_values("temp_mean")
+#     ax.plot(
+#         group_sorted["temp_mean"],
+#         group_sorted["spider_count"],
+#         marker="o",   # keep the points visible
+#         label=str(year),
+#     )
+# ax.set_xlabel("Monthly mean temperature (°F)")
+# ax.set_ylabel("Spider abundance (monthly Arachnida observations)")
+# ax.set_title("Spider abundance vs temperature by year")
+# ax.legend(title="Year")
+
+# fig.tight_layout()
+# plt.show()
+
+# ====== creating a twin y-axis line plot ====== #
+# left y axis will be arthropod abundance
+# right y axis will be average temperature
+# x axis will be january to december
+# lines will be for each year from 2017 to 2023
+
+# df_plot = df_monthly.dropna(subset=['temp_mean']).copy()
+# df_plot["date_month"] = df_plot["date_month"].astype(int)
+
+# month_positions = np.arange(1, 13)
+# month_labels = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+
+# fig, ax1 = plt.subplots(figsize=(8,6))
+# ax2 = ax1.twinx()
+
+# years = sorted(df_plot["year"].unique())
+# cmap = plt.get_cmap("tab10")
+# colors = cmap(np.linspace(0, 1, len(years)))
+
+# for color, year in zip(colors, years):
+#     data_year = df_plot[df_plot["year"] == year].sort_values("month")
+
+#     ax1.plot()
+
+
+# ====== attempt at a time series line plot ====== #
+# the x axis will be broken up by section, months and years, for air quality and arthropod abundance
+# for instance, january to march will be one section, april to august, sept to dec, etc.
+# this would all fall under a section for 2017, then the next section would be for 2018, etc.
+# this matches the format for air quality index reporting
+# we may need to match up the arthropod abundance to monthly averages for air quality index
+
