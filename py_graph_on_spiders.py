@@ -81,3 +81,23 @@ df_monthly['spider_count'] = df_monthly['spider_count'].fillna(0)
 df_monthly = df_monthly.sort_values("date_month").reset_index(drop=True)
 
 print(df_monthly)
+
+# ====== now creating graphs below ====== #
+# creating a scatter plot to visualize the relationship between spider counts and average temperature
+df_scatter_temp = df_monthly.dropna(subset=['temp_mean'])
+fig, ax = plt.subplots(figsize=(10, 6))
+for year, group in df_scatter_temp.groupby("year"):
+    group_sorted = group.sort_values("temp_mean")
+    ax.plot(
+        group_sorted["temp_mean"],
+        group_sorted["spider_count"],
+        marker="o",   # keep the points visible
+        label=str(year),
+    )
+ax.set_xlabel("Monthly mean temperature (°F)")
+ax.set_ylabel("Spider abundance (monthly Arachnida observations)")
+ax.set_title("Spider abundance vs temperature by year")
+ax.legend(title="Year")
+
+fig.tight_layout()
+plt.show()
