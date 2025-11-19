@@ -1,6 +1,6 @@
 # data_cleaning.py
 """
-Utility functions to clean and preprocess observation CSVs (spiders, flies, etc.).
+Utility functions to clean CSVs and creation of dataframes (spiders, flies, etc.).
 """
 from pathlib import Path
 from typing import Optional, Union
@@ -43,23 +43,6 @@ def clean_observation_csv(csv_path: Union[str, Path],
     df['date_month'] = df['observed_on'].values.astype('datetime64[M]')
 
     return df
-
-def aggregate_monthly_counts(df: pd.DataFrame, 
-                             count_col: str = "count",
-                             ) -> pd.DataFrame:
-    # function to aggregate monthly counts from cleaned dataframes
-    # may be used for spiders, flies, or other observation dataframes
-    # allows for future merging with weather and air quality dataframes
-    required_cols = {'year', 'month', 'date_month'}
-    missing = required_cols - set(df.columns)
-    if missing: 
-        raise KeyError(f"DataFrame is missing required columns: {missing}")
-    monthly = (
-        df.groupby(['year', 'month', 'date_month'])
-        .size()
-        .reset_index(name=count_col)
-    )
-    return monthly
 
 def clean_air_quality_monthly(csv_path: Union[str, Path],
                               start: pd.Timestamp,
@@ -199,3 +182,5 @@ def build_monthly_grid(start: pd.Timestamp, cutoff: pd.Timestamp) -> pd.DataFram
     base["year"] = base["date_month"].dt.year
     base["month"] = base["date_month"].dt.month
     return base
+
+
