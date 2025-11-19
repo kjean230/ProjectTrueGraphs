@@ -2,8 +2,6 @@
 
 
 import pandas as pd
-from pathlib import Path
-from typing import Optional, Union
 """
 Utility functions to aggregate cleaned observation data (spiders, flies, etc.).
 """
@@ -47,7 +45,7 @@ def add_season_column(df: pd.DataFrame,
             
         # making a copy of the dataframe to avoid modifying the original
         # then making sure the seasons are in a specific order for future graphing purposes
-        df = df.copy
+        df = df.copy()
         df[season_col] = month_series.apply(month_to_season)
         season_order = ["Winter", "Summer", "Fall"]
         df[season_col] = pd.Categorical(df[season_col], categories=season_order, ordered=True)
@@ -68,7 +66,6 @@ def aggregate_seasonal_counts(df: pd.DataFrame,
              df.groupby(['year', season_col])[count_col]
              .sum()
              .reset_index(name=out_col)
-             .rename(columns={count_col: out_col})
              .sort_values(['year', season_col])
              .reset_index(drop=True)
         )   

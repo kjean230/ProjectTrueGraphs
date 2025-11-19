@@ -24,7 +24,7 @@ def clean_observation_csv(csv_path: Union[str, Path],
 
     if iconic_taxon is not None:
         if "iconic_taxon_name" not in df.columns:
-            raise KeyError(f"'iconic_taxon_name' column not found in {csv_path.name}" 
+            raise KeyError(f"'iconic_taxon_name' column not found in {csv_path.name} " 
                            "but iconic_taxon filter was provided.")
         df = df[df["iconic_taxon_name"] == iconic_taxon].copy()
 
