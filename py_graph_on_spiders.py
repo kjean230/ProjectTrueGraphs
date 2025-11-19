@@ -11,11 +11,17 @@ import matplotlib.pyplot as plt
 
 # imports functions from other py file to clean and aggregate data
 from data_cleaning import (
-    clean_observation_csv, 
-    aggregate_monthly_counts, 
+    clean_observation_csv,  
     clean_air_quality_monthly,
     clean_weather_monthly,
     build_monthly_grid,
+)
+
+from data_aggregation import (
+    aggregate_monthly_counts,
+    aggregate_seasonal_counts, 
+    aggregate_seasonal_aql, 
+    add_season_column
 )
 
 # creates file paths for specific csv files
