@@ -22,61 +22,112 @@ from data_aggregation import (
     add_season_column
 )
 
-# creating file paths for specific csv files
-# for spiders, flies, and air quality data
-BASE_DIR = Path(__file__).resolve().parent.parent / "ProjectTrueGraphs" / "csv files"
-
-CSV_FILE_SPIDERS = BASE_DIR / "file_of_spiders - Sheet1.csv"
-CSV_FILE_FLIES = BASE_DIR / "files_of_flies - Sheet1.csv"
-CSV_FILE_AQ = BASE_DIR / "file_of_air_quality.csv"
-
-# creates a date range for cleaning the dataframes
-# from January 1, 2017 to June 1, 2023
-start = pd.Timestamp("2017-01-01")
-cutoff = pd.Timestamp("2023-06-01")
-
-# cleaning the spider observation csv file
-# creates the df for spiders
-# creates aggregated monthly counts for spiders
-spider_df = clean_observation_csv(
-    CSV_FILE_SPIDERS,
-    start=start,
-    cutoff=cutoff,
-    iconic_taxon="Arachnida",
-)
-spider_monthly = aggregate_monthly_counts(spider_df, count_col="spider_count")
-
-# cleaning fly data csv file
-# creates the df for flies
-# creates aggregated monthly counts for flies
-fly_df = clean_observation_csv(
-    CSV_FILE_FLIES,
-    start=start,
-    cutoff=cutoff,
-    iconic_taxon="Insecta",
-)
-fly_monthly = aggregate_monthly_counts(fly_df, count_col="fly_count")
-
-# cleaning the air quality CSV file
-# similar format to the other dataframes
-aq_monthly_df = clean_air_quality_monthly(
-    CSV_FILE_AQ,
-    start=start,
-    cutoff=cutoff,
+from plotting_file import (
+    plot_scatter_by_year,
+    plot_time_series,
 )
 
-# building the monthly grid for merging dataframes later on
-base_months = build_monthly_grid(start=start, cutoff=cutoff)
-df_monthly = (
-    base_months.merge(spider_monthly, on=["year", "month", "date_month"], how="left")
-    .merge(fly_monthly, on=["year", "month", "date_month"], how="left")
-    .merge(aq_monthly_df, on=["year", "month", "date_month"], how="left")
-)
+def main():
+    # creating file paths for specific csv files
+    # for spiders, flies, and air quality data
+    BASE_DIR = Path(__file__).resolve().parent.parent / "ProjectTrueGraphs" / "csv files"
 
-# filling in missing values with 0 for counts
-# for both spiders and flies
-df_monthly["spider_count"] = df_monthly["spider_count"].fillna(0).astype(int)
-df_monthly["fly_count"] = df_monthly["fly_count"].fillna(0).astype(int)
+    CSV_FILE_SPIDERS = BASE_DIR / "file_of_spiders - Sheet1.csv"
+    CSV_FILE_FLIES = BASE_DIR / "files_of_flies - Sheet1.csv"
+    CSV_FILE_AQ = BASE_DIR / "file_of_air_quality.csv"
 
-# need to sort by time for future graphing purposes
-df_monthly = df_monthly.sort_values("date_month").reset_index(drop=True)
+    # creates a date range for cleaning the dataframes
+    # from January 1, 2017 to June 1, 2023
+    start = pd.Timestamp("2017-01-01")
+    cutoff = pd.Timestamp("2023-06-01")
+
+    # cleaning the spider observation csv file
+    # creates the df for spiders
+    # creates aggregated monthly counts for spiders
+    spider_df = clean_observation_csv(
+        CSV_FILE_SPIDERS,
+        start=start,
+        cutoff=cutoff,
+        iconic_taxon="Arachnida",
+    )
+    spider_monthly = aggregate_monthly_counts(spider_df, count_col="spider_count")
+
+    # cleaning fly data csv file
+    # creates the df for flies
+    # creates aggregated monthly counts for flies
+    fly_df = clean_observation_csv(
+        CSV_FILE_FLIES,
+        start=start,
+        cutoff=cutoff,
+        iconic_taxon="Insecta",
+    )
+    fly_monthly = aggregate_monthly_counts(fly_df, count_col="fly_count")
+
+    # cleaning the air quality CSV file
+    # similar format to the other dataframes
+    aq_monthly_df = clean_air_quality_monthly(
+        CSV_FILE_AQ,
+        start=start,
+        cutoff=cutoff,
+    )
+
+    # building the monthly grid for merging dataframes later on
+    base_months = build_monthly_grid(start=start, cutoff=cutoff)
+    df_monthly = (
+        base_months.merge(spider_monthly, on=["year", "month", "date_month"], how="left")
+        .merge(fly_monthly, on=["year", "month", "date_month"], how="left")
+        .merge(aq_monthly_df, on=["year", "month", "date_month"], how="left")
+    )
+
+    # filling in missing values with 0 for counts
+    # for both spiders and flies
+    df_monthly["spider_count"] = df_monthly["spider_count"].fillna(0).astype(int)
+    df_monthly["fly_count"] = df_monthly["fly_count"].fillna(0).astype(int)
+
+    # need to sort by time for future graphing purposes
+    df_monthly = df_monthly.sort_values("date_month").reset_index(drop=True)
+
+    # plotting scatter plots by year for spiders, flies, and AQI
+    userGraphs = input("Which kind of graph would you like to see? (scatter/time series): ").strip().lower()
+    if userGraphs == "scatter":
+        plot_scatter_by_year(
+            df_monthly,
+            x_col="air_quality_index",
+            y_col="spider_count",
+            title="Spider Counts vs Air Quality Index",
+            x_label="Air Quality Index (AQI)",
+            y_label="Monthly Spider Counts",
+            output_filename="spider_aqi_scatter.png",
+        )
+        plot_scatter_by_year(
+            df_monthly,
+            x_col="air_quality_index",
+            y_col="fly_count",
+            title="Fly Counts vs Air Quality Index",
+            x_label="Air Quality Index (AQI)",
+            y_label="Monthly Fly Counts",
+            output_filename="fly_aqi_scatter.png",
+        )
+    elif userGraphs == "time series":
+        plot_time_series(
+            df_monthly,
+            date_col="date_month",
+            y_col="spider_count",
+            title="Monthly Spider Counts Over Time",
+            y_label="Monthly Spider Counts",
+            output_filename="spider_time_series.png",
+        )
+        plot_time_series(
+            df_monthly,
+            date_col="date_month",
+            y_col="fly_count",
+            title="Monthly Fly Counts Over Time",
+            y_label="Monthly Fly Counts",
+            output_filename="fly_time_series.png",
+        )
+    else:
+        print("Invalid input. Please enter 'scatter' or 'time-series'.")
+
+
+if __name__ == "__main__":
+    main()
