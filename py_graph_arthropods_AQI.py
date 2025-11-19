@@ -46,3 +46,37 @@ spider_df = clean_observation_csv(
 )
 spider_monthly = aggregate_monthly_counts(spider_df, count_col="spider_count")
 
+# cleaning fly data csv file
+# creates the df for flies
+# creates aggregated monthly counts for flies
+fly_df = clean_observation_csv(
+    CSV_FILE_FLIES,
+    start=start,
+    cutoff=cutoff,
+    iconic_taxon="Insecta",
+)
+fly_monthly = aggregate_monthly_counts(fly_df, count_col="fly_count")
+
+# cleaning the air quality CSV file
+# similar format to the other dataframes
+aq_monthly_df = clean_air_quality_monthly(
+    CSV_FILE_AQ,
+    start=start,
+    cutoff=cutoff,
+)
+
+# building the monthly grid for merging dataframes later on
+base_months = build_monthly_grid(start=start, cutoff=cutoff)
+df_monthly = (
+    base_months.merge(spider_monthly, on=["year", "month", "date_month"], how="left")
+    .merge(fly_monthly, on=["year", "month", "date_month"], how="left")
+    .merge(aq_monthly_df, on=["year", "month", "date_month"], how="left")
+)
+
+# filling in missing values with 0 for counts
+# for both spiders and flies
+df_monthly["spider_count"] = df_monthly["spider_count"].fillna(0).astype(int)
+df_monthly["fly_count"] = df_monthly["fly_count"].fillna(0).astype(int)
+
+# need to sort by time for future graphing purposes
+df_monthly = df_monthly.sort_values("date_month").reset_index(drop=True)
