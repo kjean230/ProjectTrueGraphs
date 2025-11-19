@@ -70,7 +70,7 @@ weather_monthly_df = clean_weather_monthly(
 # uses a left join (similar to sql) to keep all the spider data
 base_months = build_monthly_grid(start=start, cutoff=cutoff)
 df_monthly = (
-    base_months.merge(spider_monthly, on=["year", "month"], how="left")
+    base_months.merge(spider_monthly, on=["year", "month", "date_month"], how="left")
     .merge(weather_monthly_df, on=['year', 'month', 'date_month'], how='left')
     .merge(air_quality_df, on=['year', 'month', 'date_month'], how='left')
 )
@@ -78,6 +78,6 @@ df_monthly = (
 # if any spiders are not accounted for, fill those null values with 0
 # we can also sort the dataframe by year and month to ensure proper order/readability
 df_monthly['spider_count'] = df_monthly['spider_count'].fillna(0)
-df_monthly = df_monthly.sort_values(['year', 'month']).reset_index(drop=True)
+df_monthly = df_monthly.sort_values("date_month").reset_index(drop=True)
 
 print(df_monthly)
