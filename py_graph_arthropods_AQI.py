@@ -91,7 +91,7 @@ def main():
 
     # plotting scatter plots by year for spiders, flies, and AQI
     # getting user input for graph choice
-    userGraphs = input("Which kind of graph would you like to see? (scatter/time series): ").strip().lower()
+    userGraphs = input("Which kind of graph would you like to see? (scatter/time series/seasonal/bins): ").strip().lower()
     create_graph_from_choice(userGraphs, df_monthly)
 
 if __name__ == "__main__":
