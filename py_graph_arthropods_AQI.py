@@ -27,6 +27,8 @@ from plotting_file import (
     plot_abundance_aqi_time_series,
 )
 
+from user_input_to_create_graphs import create_graph_from_choice
+
 def main():
     # creating file paths for specific csv files
     # for spiders, flies, and air quality data
@@ -88,48 +90,9 @@ def main():
     df_monthly = df_monthly.sort_values("date_month").reset_index(drop=True)
 
     # plotting scatter plots by year for spiders, flies, and AQI
+    # getting user input for graph choice
     userGraphs = input("Which kind of graph would you like to see? (scatter/time series): ").strip().lower()
-    if userGraphs == "scatter":
-    # color by YEAR
-        plot_scatter_spiders_flies_colored(
-            df_monthly,
-            x_col="aqi_mean",
-            spider_col="spider_count",
-            fly_col="fly_count",
-            color_by="year",  # or "season"
-            x_label="Air Quality Index (AQI)",
-            y_label="Monthly Arthropod Counts",
-            title="Spider & Fly Counts vs AQI (colored by year)",
-            output_filename="spider_fly_aqi_scatter_by_year.png",
-        )
-        # or, if you want SEASON instead:
-        # plot_scatter_spiders_flies_colored(
-        #     df_monthly,
-        #     x_col="aqi_mean",
-        #     spider_col="spider_count",
-        #     fly_col="fly_count",
-        #     color_by="season",
-        #     x_label="Air Quality Index (AQI)",
-        #     y_label="Monthly Arthropod Counts",
-        #     title="Spider & Fly Counts vs AQI (colored by season)",
-        #     output_filename="spider_fly_aqi_scatter_by_season.png",
-        # )
-    elif userGraphs == "time series":
-        plot_abundance_aqi_time_series(
-            df_monthly,
-            date_col="date_month",
-            spider_col="spider_count",
-            fly_col="fly_count",
-            aqi_col="aqi_mean",
-            x_label="Month",
-            left_y_label="Monthly Arthropod Counts",
-            right_y_label="Mean AQI",
-            title="Spiders & Flies vs Air Quality Over Time",
-            output_filename="spider_fly_aqi_aq_time_series.png",
-            smooth_window=6,
-        )
-    else:
-        print("Invalid input. Please enter 'scatter' or 'time series'.")
+    create_graph_from_choice(userGraphs, df_monthly)
 
 if __name__ == "__main__":
     main()
