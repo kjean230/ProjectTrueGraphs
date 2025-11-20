@@ -23,8 +23,8 @@ from data_aggregation import (
 )
 
 from plotting_file import (
-    plot_scatter_by_year,
-    plot_time_series,
+    plot_scatter_spiders_flies_colored,
+    plot_abundance_aqi_time_series,
 )
 
 def main():
@@ -90,40 +90,43 @@ def main():
     # plotting scatter plots by year for spiders, flies, and AQI
     userGraphs = input("Which kind of graph would you like to see? (scatter/time series): ").strip().lower()
     if userGraphs == "scatter":
-        plot_scatter_by_year(
+    # color by YEAR
+        plot_scatter_spiders_flies_colored(
             df_monthly,
-            x_col="aqi_mean",  # <- changed from "air_quality_index"
-            y_col="spider_count",
-            title="Spider Counts vs Air Quality Index",
+            x_col="aqi_mean",
+            spider_col="spider_count",
+            fly_col="fly_count",
+            color_by="year",  # or "season"
             x_label="Air Quality Index (AQI)",
-            y_label="Monthly Spider Counts",
-            output_filename="spider_aqi_scatter.png",
+            y_label="Monthly Arthropod Counts",
+            title="Spider & Fly Counts vs AQI (colored by year)",
+            output_filename="spider_fly_aqi_scatter_by_year.png",
         )
-        plot_scatter_by_year(
-            df_monthly,
-            x_col="aqi_mean",  # <- changed from "air_quality_index"
-            y_col="fly_count",
-            title="Fly Counts vs Air Quality Index",
-            x_label="Air Quality Index (AQI)",
-            y_label="Monthly Fly Counts",
-            output_filename="fly_aqi_scatter.png",
-        )
+        # or, if you want SEASON instead:
+        # plot_scatter_spiders_flies_colored(
+        #     df_monthly,
+        #     x_col="aqi_mean",
+        #     spider_col="spider_count",
+        #     fly_col="fly_count",
+        #     color_by="season",
+        #     x_label="Air Quality Index (AQI)",
+        #     y_label="Monthly Arthropod Counts",
+        #     title="Spider & Fly Counts vs AQI (colored by season)",
+        #     output_filename="spider_fly_aqi_scatter_by_season.png",
+        # )
     elif userGraphs == "time series":
-        plot_time_series(
+        plot_abundance_aqi_time_series(
             df_monthly,
             date_col="date_month",
-            y_col="spider_count",
-            title="Monthly Spider Counts Over Time",
-            y_label="Monthly Spider Counts",
-            output_filename="spider_time_series.png",
-        )
-        plot_time_series(
-            df_monthly,
-            date_col="date_month",
-            y_col="fly_count",
-            title="Monthly Fly Counts Over Time",
-            y_label="Monthly Fly Counts",
-            output_filename="fly_time_series.png",
+            spider_col="spider_count",
+            fly_col="fly_count",
+            aqi_col="aqi_mean",
+            x_label="Month",
+            left_y_label="Monthly Arthropod Counts",
+            right_y_label="Mean AQI",
+            title="Spiders & Flies vs Air Quality Over Time",
+            output_filename="spider_fly_aqi_aq_time_series.png",
+            smooth_window=6,
         )
     else:
         print("Invalid input. Please enter 'scatter' or 'time series'.")
