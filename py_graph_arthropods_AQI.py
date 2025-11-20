@@ -92,7 +92,7 @@ def main():
     if userGraphs == "scatter":
         plot_scatter_by_year(
             df_monthly,
-            x_col="air_quality_index",
+            x_col="aqi_mean",  # <- changed from "air_quality_index"
             y_col="spider_count",
             title="Spider Counts vs Air Quality Index",
             x_label="Air Quality Index (AQI)",
@@ -101,7 +101,7 @@ def main():
         )
         plot_scatter_by_year(
             df_monthly,
-            x_col="air_quality_index",
+            x_col="aqi_mean",  # <- changed from "air_quality_index"
             y_col="fly_count",
             title="Fly Counts vs Air Quality Index",
             x_label="Air Quality Index (AQI)",
@@ -126,8 +126,7 @@ def main():
             output_filename="fly_time_series.png",
         )
     else:
-        print("Invalid input. Please enter 'scatter' or 'time-series'.")
-
+        print("Invalid input. Please enter 'scatter' or 'time series'.")
 
 if __name__ == "__main__":
     main()
