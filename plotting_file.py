@@ -101,7 +101,7 @@ def plot_abundance_aqi_time_series(
 
 def _ensure_season_column_local(
     df: pd.DataFrame,
-    month_col: str = "month",
+    month_col: str = "Month",
     season_col: str = "season",
 ) -> pd.DataFrame:
     """
