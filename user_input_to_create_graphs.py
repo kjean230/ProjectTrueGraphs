@@ -12,13 +12,10 @@ from plotting_file import (
 
 
 def create_graph_from_choice(choice: str, df_monthly: pd.DataFrame) -> None:
-    """
-    Dispatch function that calls the appropriate plotting routine
-    based on a user string.
-
-    Expected df_monthly columns:
-    - date_month, year, month, spider_count, fly_count, aqi_mean
-    """
+   # based on whatever the user wants, create the appropriate graph
+   # choices include: time_series, scatter, seasonal_bar, aqi_bins
+   # function to reduce clutter in main analysis script
+   # easier debugging and future modifications
 
     choice_norm = choice.strip().lower()
 
